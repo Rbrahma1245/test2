@@ -1,0 +1,58 @@
+{
+  "PROJECT_DETAILS_ROW": [
+    {
+      "id": "1",
+      "PROJECT_ID": "1",
+      "PROJECT_CODE": "DMS",
+      "PROJECT_NAME":"DMS",
+      "PROJECT_DESCRIPTION":"Database Management Sysytem Testing title 1",
+      "PROJECT_LEAD":"Shuaib (Project Lead)",
+      "PROJECT_LEAD_EMAIL":"shuaib@appstec.in"
+    },
+    {
+      "id": "2",
+      "PROJECT_ID": "2",
+      "PROJECT_CODE": "ELIT",
+      "PROJECT_NAME":"ELIT Test",
+      "PROJECT_DESCRIPTION":"ELIT Testing title",
+      "PROJECT_LEAD":"Rajshekar (Project Lead)",
+      "PROJECT_LEAD_EMAIL":"raj@appstec.in"
+    },
+    {
+      "id": "3",
+      "PROJECT_ID": "3",
+      "PROJECT_CODE": "ELIT",
+      "PROJECT_NAME":"ELIT Test 1",
+      "PROJECT_DESCRIPTION":"ELIT Testing title  testing 1",
+      "PROJECT_LEAD":"Praveen (Project Lead)",
+      "PROJECT_LEAD_EMAIL":"raj@appstec.in"
+    },
+    {
+      "id": "4",
+      "PROJECT_ID": "4",
+      "PROJECT_CODE": "ELIT",
+      "PROJECT_NAME":"ELIT Test 2",
+      "PROJECT_DESCRIPTION":"ELIT Testing title testing 2",
+      "PROJECT_LEAD":"Himam (Project Lead)",
+      "PROJECT_LEAD_EMAIL":"raj@appstec.in"
+    },
+    {
+      "id": "5",
+      "PROJECT_ID": "5",
+      "PROJECT_CODE": "TG_01",
+      "PROJECT_NAME":"Tech Guard",
+      "PROJECT_DESCRIPTION":"TechGuard: Fortifying Digital Frontiers for Secure Connectivity",
+      "PROJECT_LEAD":"Vinay (Project Lead)",
+      "PROJECT_LEAD_EMAIL":"raj@appstec.in"
+    },
+    {
+      "id": "6",
+      "PROJECT_ID": "6",
+      "PROJECT_CODE": "TEST",
+      "PROJECT_NAME":"ELIT Test",
+      "PROJECT_DESCRIPTION":"ELIT Test",
+      "PROJECT_LEAD":"Praveen (Project Lead)",
+      "PROJECT_LEAD_EMAIL":"raj@appstec.in"
+    }
+  ]
+}
