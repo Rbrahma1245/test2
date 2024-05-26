@@ -23,6 +23,7 @@
     "@mui/x-date-pickers": "^6.19.6",
     "@mui/x-tree-view": "^6.17.0",
     "axios": "^1.6.8",
+    "lodash": "^4.17.21",
     "mui-one-time-password-input": "^2.0.2",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",

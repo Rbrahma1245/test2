@@ -290,10 +290,10 @@
 
 
 
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, Container, MenuItem, OutlinedInput, Select, Stack, Typography } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, Chip, Container, MenuItem, OutlinedInput, Select, Stack, Typography } from '@mui/material'
 import * as Yup from 'yup';
-import React, { useMemo } from 'react'
-import {RHFSelect, RHFTextField } from '../../../../components/hook-form'
+import React, { useEffect, useMemo, useState } from 'react'
+import { RHFSelect, RHFTextField, RHFAutocomplete } from '../../../../components/hook-form'
 import { LEAD_OPTIONS } from '../../../../_mock/_projects'
 import FormProvider from '../../../../components/hook-form'
 import { useForm } from 'react-hook-form';
@@ -301,6 +301,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from '../../../../routes/hooks';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { isObjectEmpty } from '../utils';
+import Invite from './invite';
 
 
 function CreateProject() {
@@ -328,11 +329,10 @@ function CreateProject() {
       projectName: '',
       projectLead: '',
       projectDescription: '',
-      category: ["Client", "Server"],
 
 
-      email: "",
-      roleCode: ""
+      // email: "",
+      // roleCode: ""
 
 
 
@@ -353,20 +353,41 @@ function CreateProject() {
   });
 
   const {
-    // reset,
+    reset,
     // control,
-
+    setValue,
 
     handleSubmit,
     formState: { isSubmitting, errors },
   } = methods;
 
-  console.log(isObjectEmpty(errors));
+
+  const [formVal, setFormVal] = useState()
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log("click");
-    console.log(data);
+
+    const categoryObject = data.category.reduce((acc, cur) => {
+      acc[cur] = cur;
+      return acc;
+    }, {});
+
+    const updateCategoryObject = data.category.reduce((acc, cur) => {
+      acc[cur.toLowerCase()] = [];
+      return acc;
+    }, {});
+
+    console.log(updateCategoryObject);
+
+
+    setFormVal({
+      ...data,
+      ...categoryObject,
+      ...updateCategoryObject
+    });
+
   });
+
+
 
 
   const category = [
@@ -384,6 +405,10 @@ function CreateProject() {
   const handleChangeSelectField = (e) => {
     console.log(e);
   };
+
+
+  const docCategory = ["Client", "Server", "Database"]
+
 
 
 
@@ -431,6 +456,36 @@ function CreateProject() {
                 ))}
               </RHFSelect>
             </Box>
+            <Box sx={{ mt: 5 }}>
+              <RHFAutocomplete
+                name="category"
+                label="Document Category"
+                placeholder="+ category"
+                multiple
+                freeSolo
+                // sx={{ width: 320 }}
+                options={docCategory.map((option) => option)}
+                getOptionLabel={(option) => option}
+                renderOption={(props, option) => (
+                  <li {...props} key={option}>
+                    {option}
+                  </li>
+                )}
+                renderTags={(selected, getTagProps) =>
+                  selected.map((option, index) => (
+                    <Chip
+                      {...getTagProps({ index })}
+                      key={option}
+                      label={option}
+                      size="small"
+                      color="info"
+                      variant="soft"
+                    />
+                  ))
+                }
+              />
+            </Box>
+
 
 
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mt: 3 }}>
@@ -440,13 +495,22 @@ function CreateProject() {
                 style={{ width: '84%', height: 30, resize: "vertical" }}
               />
             </Box>
-
-
           </Box>
 
-          <Accordion>
+          <Box mt={5}>
+            <Button type='submit' variant="contained">
+              Add Team Member
+            </Button>
+          </Box>
+
+          {
+            formVal == undefined ? "" : <Invite formVal={formVal} />
+          }
+
+
+          {/* <Accordion>
             <AccordionSummary
-              expandIcon={isObjectEmpty(errors)? <ExpandMoreIcon /> : ""}
+              expandIcon={isObjectEmpty(errors) ? <ExpandMoreIcon /> : ""}
               onClick={() => onSubmit()}
             >
               INVITE
@@ -475,7 +539,7 @@ function CreateProject() {
               </AccordionDetails>
             }
 
-          </Accordion>
+          </Accordion> */}
 
 
         </Card>
