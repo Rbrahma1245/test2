@@ -1,33 +1,28 @@
 {
   "DOCUMENTS_ROW": [
     {
-      "id": "3",
-      "TITLE": "DMS Title 3",
-      "FILE_NAME": "dms3.pdf",
-      "DESCRIPTION": "Testing for DMS",
-      "DOCUMNET_CATEGORY": "Server",
-      "VERSION": "1.0.8"
+      "TITLE": "Test",
+      "FILE_NAME": "testing",
+      "DESCRIPTION": "testing",
+      "DOCUMNET_CATEGORY": "Client",
+      "VERSION": 1,
+      "id": "2b17c676-69e8-497f-8580-ade31af0ddb5"
     },
     {
-      "id": "10",
-      "TITLE": "df",
-      "FILE_NAME": "sdfsd",
-      "DESCRIPTION": "sdfs",
-      "DOCUMNET_CATEGORY": "sdgsd"
+      "TITLE": "Test",
+      "FILE_NAME": "testing",
+      "DESCRIPTION": "testing",
+      "DOCUMNET_CATEGORY": "Client",
+      "VERSION": 2,
+      "id": "2b17c676-69e8-497f-8580-ade31af0d20l"
     },
     {
-      "id": "322ad4ea-029a-48ff-a17c-8b4046c99f41",
-      "TITLE": "asd",
-      "FILE_NAME": "saf",
-      "DESCRIPTION": "safaf",
-      "DOCUMNET_CATEGORY": "asfa"
-    },
-    {
-      "id": "2f52df17-6d55-4ecd-81f0-c433e915c671",
-      "TITLE": "as",
-      "FILE_NAME": "asdfsa",
-      "DESCRIPTION": "asf",
-      "DOCUMNET_CATEGORY": "asfas"
+      "TITLE": "Test",
+      "FILE_NAME": "testing",
+      "DESCRIPTION": "testing",
+      "DOCUMNET_CATEGORY": "Client",
+      "VERSION": 3,
+      "id": "2b17c676-69e8-497f-8580-ade31af0dcch"
     }
   ]
 }

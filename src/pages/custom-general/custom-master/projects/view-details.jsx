@@ -342,6 +342,7 @@ function ViewProjectDetails() {
   const router = useRouter()
 
   let [projectData, setProjectData] = useState([])
+  let [filterProjectData, setFilterProjectData] = useState([])
 
 
 
@@ -472,10 +473,10 @@ function ViewProjectDetails() {
   const handleDataClick = (params) => {
    
     if(params.field === "DOCUMNET_CATEGORY"){
+      console.log(params);
       console.log(params.value);
     }
 
-    
 
     // console.log(data.row);
   };
@@ -485,6 +486,17 @@ function ViewProjectDetails() {
     fetchData();
   }, []);
 
+  const uniqueTitles = projectData.reduce((acc, obj) => {
+    // Check if TITLE already exists in the accumulator
+    if (!acc[obj.TITLE] || acc[obj.TITLE].VERSION < obj.VERSION) {
+      acc[obj.TITLE] = obj; // Update or add the object with the highest VERSION
+    }
+    return acc;
+  }, {});
+  
+  const uniqueData = Object.values(uniqueTitles);
+  
+  console.log(uniqueData, "unique");
 
 
   const columns = [
@@ -627,7 +639,7 @@ function ViewProjectDetails() {
 
       <Stack sx={{ marginTop: 2 }}>
         <DataGrid
-          rows={projectData}
+          rows={uniqueData}
           columns={columns}
           pageSizeOptions={[5, 10, 25]}
           initialState={{
