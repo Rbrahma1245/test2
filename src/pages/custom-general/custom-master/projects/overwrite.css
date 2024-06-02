@@ -1,0 +1,3 @@
+.unclickable-column {
+  pointer-events: none !important; /* Disable pointer events */
+}

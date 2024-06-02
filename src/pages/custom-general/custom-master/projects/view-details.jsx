@@ -333,6 +333,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { RHFTextField } from '../../../../components/hook-form';
 import { v4 as uuidv4 } from "uuid";
+import "./overwrite.css"
 
 
 
@@ -468,8 +469,15 @@ function ViewProjectDetails() {
   }
 
 
-  const handleDataClick = (data) => {
-    console.log(data.row);
+  const handleDataClick = (params) => {
+   
+    if(params.field === "DOCUMNET_CATEGORY"){
+      console.log(params.value);
+    }
+
+    
+
+    // console.log(data.row);
   };
 
 
@@ -480,9 +488,9 @@ function ViewProjectDetails() {
 
 
   const columns = [
-    { field: 'TITLE', headerName: 'Title', hide: true, width: 200 },
-    { field: 'FILE_NAME', headerName: 'File Name', width: 200 },
-    { field: 'DESCRIPTION', headerName: 'Description', width: 300 },
+    { field: 'TITLE', headerName: 'Title', hide: true, width: 200,cellClassName: 'unclickable-column'},
+    { field: 'FILE_NAME', headerName: 'File Name', width: 200 ,cellClassName: 'unclickable-column'},
+    { field: 'DESCRIPTION', headerName: 'Description', width: 300 , cellClassName: 'unclickable-column'},
     { field: 'DOCUMNET_CATEGORY', headerName: 'Document Category', width: 200 },
     {
       type: 'actions',
@@ -661,4 +669,8 @@ function ViewProjectDetails() {
   )
 }
 
+
+
 export default ViewProjectDetails
+
+
