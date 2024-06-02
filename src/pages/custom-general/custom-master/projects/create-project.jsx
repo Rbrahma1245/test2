@@ -447,6 +447,10 @@ function CreateProject() {
     setOpen(true)
   };
 
+  const handleBlur = () => {
+    setOpen(false);
+  };
+
 
 
 
@@ -475,6 +479,7 @@ function CreateProject() {
                 onFocus={handleFocus}
                 sx={{ maxWidth: 320 }}
                 onChange={handleInputChange}
+                onBlur={handleBlur}
                 autoComplete="off"
               />
               {open && filteredSuggestions.length > 0 && (
