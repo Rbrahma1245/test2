@@ -5,12 +5,17 @@ import TextField from '@mui/material/TextField';
 
 // ----------------------------------------------------------------------
 
-export default function RHFTextField({ name, helperText, type, readOnlyMode, maxLength, capitalText, errorMessage, onBlur, ...other }) {
+export default function RHFTextField({ name, helperText, type, readOnlyMode, maxLength, capitalText, errorMessage, onBlur,onChange, ...other }) {
   const { control } = useFormContext();
   const shouldCapitalizeText = capitalText === undefined ? false : capitalText;
   const handleError = (value) => {
     if (onBlur) {
       onBlur(value);
+    }
+  };
+  const handleOnChange = (value) => {
+    if (onChange) {
+      onChange(value);
     }
   };
   return (
@@ -47,6 +52,7 @@ export default function RHFTextField({ name, helperText, type, readOnlyMode, max
                 handleError(null);
               }
             }
+            handleOnChange(event.target.value);
           }}
           onBlur={() => {
             handleError(field.value);
@@ -70,5 +76,7 @@ RHFTextField.propTypes = {
   onFocus: PropTypes.func,
   onError: PropTypes.func,
   onBlur: PropTypes.func,
+  onChange: PropTypes.func,
+
   errorMessage: PropTypes.string,
 };

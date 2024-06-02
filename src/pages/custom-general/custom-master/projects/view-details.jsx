@@ -334,6 +334,7 @@ import * as Yup from 'yup';
 import { RHFTextField } from '../../../../components/hook-form';
 import { v4 as uuidv4 } from "uuid";
 import "./overwrite.css"
+import Swal from 'sweetalert2';
 
 
 
@@ -356,7 +357,7 @@ function ViewProjectDetails() {
     }
   };
 
- 
+
 
 
   // let x = projectData.find((e)=> e.PROJECT_ID == projectId)
@@ -446,35 +447,59 @@ function ViewProjectDetails() {
       setValue(key, params[key]);
     });
     // setValue({params})
- 
+
 
     console.log(params, "edit");
   }
 
-  const handleDeleteClick = async({params, e} ) => {
-    console.log("delect click");
-    e.stopPropagation()
+  const handleDeleteClick = async ({ params, e }) => {
+    console.log("delete click");
+    e.stopPropagation();
   
-    
-    let deleteId = params.id;
-
-    try {
+    const result = await Swal.fire({
+      title: "Are you sure you want to delete?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    });
+  
+    if (result.isConfirmed) {
+      // Delete functionality
+      let deleteId = params.id;
+  
+      try {
         await axios.delete(`http://localhost:5051/DOCUMENTS_ROW/${deleteId}`);
         console.log("Item deleted successfully", params);
-
-         // Remove the deleted item from projectData state
-         setProjectData(prevData => prevData.filter(item => item.id !== deleteId));
-    } catch (error) {
+  
+        // Remove the deleted item from projectData state
+        setProjectData(prevData => prevData.filter(item => item.id !== deleteId));
+  
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success"
+        });
+      } catch (error) {
         console.error("Error deleting item:", error);
+        Swal.fire({
+          title: "Error!",
+          text: "An error occurred while deleting the item.",
+          icon: "error"
+        });
+      }
     }
-  }
+  };
+  
 
 
   const handleDataClick = (params) => {
-   
-    if(params.field === "DOCUMNET_CATEGORY"){
-      console.log(params);
-      console.log(params.value);
+
+    if (params.field === "DOCUMNET_CATEGORY") {
+      console.log(params.row);
+ 
     }
 
 
@@ -493,16 +518,16 @@ function ViewProjectDetails() {
     }
     return acc;
   }, {});
-  
+
   const uniqueData = Object.values(uniqueTitles);
-  
+
   console.log(uniqueData, "unique");
 
 
   const columns = [
-    { field: 'TITLE', headerName: 'Title', hide: true, width: 200,cellClassName: 'unclickable-column'},
-    { field: 'FILE_NAME', headerName: 'File Name', width: 200 ,cellClassName: 'unclickable-column'},
-    { field: 'DESCRIPTION', headerName: 'Description', width: 300 , cellClassName: 'unclickable-column'},
+    { field: 'TITLE', headerName: 'Title', hide: true, width: 200, cellClassName: 'unclickable-column' },
+    { field: 'FILE_NAME', headerName: 'File Name', width: 200, cellClassName: 'unclickable-column' },
+    { field: 'DESCRIPTION', headerName: 'Description', width: 300, cellClassName: 'unclickable-column' },
     { field: 'DOCUMNET_CATEGORY', headerName: 'Document Category', width: 200 },
     {
       type: 'actions',
@@ -551,7 +576,7 @@ function ViewProjectDetails() {
             icon={<Iconify icon="solar:trash-bin-trash-bold" />}
             label='DELETE_TEXT'
             onClick={(e) => {
-              handleDeleteClick({params:params.row, e})
+              handleDeleteClick({ params: params.row, e })
             }}
             sx={{ color: 'error.main' }}
           />,

@@ -290,7 +290,7 @@
 
 
 
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, Chip, Container, MenuItem, OutlinedInput, Select, Stack, Typography } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, Chip, Container, List, ListItemText, MenuItem, OutlinedInput, Paper, Select, Stack, Typography } from '@mui/material'
 import * as Yup from 'yup';
 import React, { useEffect, useMemo, useState } from 'react'
 import { RHFSelect, RHFTextField, RHFAutocomplete } from '../../../../components/hook-form'
@@ -330,6 +330,8 @@ function CreateProject() {
       projectLead: '',
       projectDescription: '',
 
+      testEmail: ""
+
 
       // email: "",
       // roleCode: ""
@@ -365,6 +367,7 @@ function CreateProject() {
   const [formVal, setFormVal] = useState()
 
   const onSubmit = handleSubmit(async (data) => {
+    console.log(data);
 
     const categoryObject = data.category.reduce((acc, cur) => {
       acc[cur] = cur;
@@ -376,7 +379,7 @@ function CreateProject() {
       return acc;
     }, {});
 
-    console.log(updateCategoryObject);
+    // console.log(updateCategoryObject);
 
 
     setFormVal({
@@ -409,6 +412,40 @@ function CreateProject() {
 
   const docCategory = ["Client", "Server", "Database"]
 
+  // EMAIL TESTING
+
+  let emailList = [
+    "arun@gmail.com", "mike@gmail.com", "rahul@gmail.com", "john@gmail.com", "test@gmail.com",
+    "Dhan@gmail.com", "Jane@gmail.com", "Chaya@gmail.com", "Test2@gmail.com", "Tes5@gmail.com",
+    "Dipankar@gmail.com", "Mayank@gmail.com", "Kim@gmail.com"
+  ]
+  const [emails, setEmails] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+
+  const handleFocus = () => {
+    setEmails(emailList);
+    setFilteredSuggestions(emailList);
+    setOpen(true);
+  };
+
+
+
+  const handleSuggestionClick = (data) => {
+    console.log(data, 'from handle suggestion');
+    setValue('testEmail', data);
+
+    setOpen(false);
+  };
+
+  const handleInputChange = (value) => {
+    const filtered = emailList.filter((email) =>
+      email.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredSuggestions(filtered);
+    setOpen(true)
+  };
 
 
 
@@ -431,6 +468,30 @@ function CreateProject() {
 
           <Box sx={{ marginY: 4 }}>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+              <RHFTextField
+                name="testEmail"
+                type="email"
+                label='Email'
+                onFocus={handleFocus}
+                sx={{ maxWidth: 320 }}
+                onChange={handleInputChange}
+                autoComplete="off"
+              />
+              {open && filteredSuggestions.length > 0 && (
+                <Paper sx={{ position: 'absolute', width: '29%', zIndex: 1, mt: 6 }}>
+                  <List sx={{ border: 1, borderColor: 'grey.400', borderRadius: 1, overflowY: 'auto', maxHeight: '200px' }}>
+                    {filteredSuggestions.map((email, index) => (
+                      <MenuItem key={index} onMouseDown={() => handleSuggestionClick(email)}>
+                        <ListItemText primary={email} />
+                      </MenuItem>
+                    ))}
+                  </List>
+                </Paper>
+              )}
+
+
+
+
               <RHFTextField
                 name="projectCode"
                 label={'PROJECT_CODE'}
@@ -503,9 +564,9 @@ function CreateProject() {
             </Button>
           </Box>
 
-          {
+          {/* {
             formVal == undefined ? "" : <Invite formVal={formVal} />
-          }
+          } */}
 
 
           {/* <Accordion>
