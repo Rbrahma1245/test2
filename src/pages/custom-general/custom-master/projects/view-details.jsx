@@ -320,10 +320,10 @@
 // }
 
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useRouter } from '../../../../routes/hooks';
 import axios from 'axios';
-import { Box, Button, Card, Container, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack, Typography } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import Iconify from '../../../../components/iconify/iconify';
 import EmptyContent from '../../../../components/empty-content';
@@ -335,6 +335,7 @@ import { RHFTextField } from '../../../../components/hook-form';
 import { v4 as uuidv4 } from "uuid";
 import "./overwrite.css"
 import Swal from 'sweetalert2';
+
 
 
 
@@ -407,6 +408,8 @@ function ViewProjectDetails() {
     formState: { isSubmitting, errors },
   } = methods;
 
+  // DIALOG BOX MODAL
+
 
 
   const onSubmit = handleSubmit(async (formField) => {
@@ -455,7 +458,7 @@ function ViewProjectDetails() {
   const handleDeleteClick = async ({ params, e }) => {
     console.log("delete click");
     e.stopPropagation();
-  
+
     const result = await Swal.fire({
       title: "Are you sure you want to delete?",
       text: "You won't be able to revert this!",
@@ -465,18 +468,18 @@ function ViewProjectDetails() {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!"
     });
-  
+
     if (result.isConfirmed) {
       // Delete functionality
       let deleteId = params.id;
-  
+
       try {
         await axios.delete(`http://localhost:5051/DOCUMENTS_ROW/${deleteId}`);
         console.log("Item deleted successfully", params);
-  
+
         // Remove the deleted item from projectData state
         setProjectData(prevData => prevData.filter(item => item.id !== deleteId));
-  
+
         Swal.fire({
           title: "Deleted!",
           text: "Your file has been deleted.",
@@ -492,14 +495,30 @@ function ViewProjectDetails() {
       }
     }
   };
-  
+
+  const [open, setOpen] = React.useState(false);
+  const [scroll, setScroll] = React.useState('paper');
 
 
-  const handleDataClick = (params) => {
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
+  const [selectedRowData, setSelectedRowData] = useState()
+
+  const handleDataClick = (params, scrollType) => {
 
     if (params.field === "DOCUMNET_CATEGORY") {
       console.log(params.row);
- 
+
+      let filter = projectData.filter((e)=> e.DOCUMNET_CATEGORY === params.row.DOCUMNET_CATEGORY)
+      
+      setSelectedRowData(filter)
+
+      setOpen(true);
+      setScroll(scrollType);
+
     }
 
 
@@ -599,110 +618,239 @@ function ViewProjectDetails() {
 
 
 
+  const columnForDocument = [
+    { field: 'TITLE', headerName: 'Title', hide: true, width: 200, cellClassName: 'unclickable-column' },
+    { field: 'FILE_NAME', headerName: 'File Name', width: 250, cellClassName: 'unclickable-column' },
+    { field: 'DESCRIPTION', headerName: 'Description', width: 300, cellClassName: 'unclickable-column' },
+    { field: 'VERSION', headerName: 'Version', width: 150, cellClassName: 'unclickable-column' },
+
+    {
+      type: 'actions',
+      field: 'Actions',
+      headerName: 'ACTION',
+      align: 'right',
+      headerAlign: 'right',
+      width: 100,
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      getActions: (params) => {
+        const isInEditMode = '';
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<Iconify icon="ri:save-2-fill" />}
+              label={'SAVE_TEXT'}
+              sx={{
+                color: 'primary.main',
+              }}
+              onClick={() => console.log('edit functionality')}
+            />,
+            <GridActionsCellItem
+              icon={<Iconify icon="iconoir:cancel" />}
+              label={'CANCEL_TEXT'}
+              className="textPrimary"
+              // onClick={() => handleConfirmCancleClick(params.id, params.row)}
+              color="inherit"
+            />,
+          ];
+        }
+
+        return [
+          <GridActionsCellItem
+            icon={<Iconify icon="ri:download-2-fill" />}
+            label={'DOWNLOAD'}
+            className="textPrimary"
+            onClick={(e) => {
+              handleDownloadClick(params.row, params.id);
+            }}
+            color="inherit"
+          />,
+
+        ];
+      },
+      
+
+ 
+      
+    },
+  ];
+
+
 
 
   return (
-    <Container
-      sx={{
-        flexGrow: 1,
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
+    <>
+      <Container
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
 
-      <FormProvider methods={methods} onSubmit={onSubmit}>
-        <Card sx={{ p: 3, textAlign: 'center', width: 1200 }} >
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="h5">{'Project Deatils'}</Typography>
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => router.push(`/`)}
-            >
-              {'RETURN'}
-            </Button>
-          </Box>
-
-          <Box sx={{ marginY: 4 }}>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-              <RHFTextField
-                name="TITLE"
-                label={'Title'}
-                sx={{ maxWidth: 320 }}
-              />
-              <RHFTextField
-                name="FILE_NAME"
-                label={'File Name'}
-                sx={{ maxWidth: 320 }}
-              />
+        <FormProvider methods={methods} onSubmit={onSubmit}>
+          <Card sx={{ p: 3, textAlign: 'center', width: 1200 }} >
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant="h5">{'Project Deatils'}</Typography>
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={() => router.push(`/`)}
+              >
+                {'RETURN'}
+              </Button>
             </Box>
 
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-              <RHFTextField
-                name="DESCRIPTION"
-                label={'Description'}
-                sx={{ maxWidth: 320 }}
-              />
+            <Box sx={{ marginY: 4 }}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+                <RHFTextField
+                  name="TITLE"
+                  label={'Title'}
+                  sx={{ maxWidth: 320 }}
+                />
+                <RHFTextField
+                  name="FILE_NAME"
+                  label={'File Name'}
+                  sx={{ maxWidth: 320 }}
+                />
+              </Box>
 
-              <RHFTextField
-                name="DOCUMNET_CATEGORY"
-                label={'Document Category'}
-                sx={{ maxWidth: 320 }}
-              />
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+                <RHFTextField
+                  name="DESCRIPTION"
+                  label={'Description'}
+                  sx={{ maxWidth: 320 }}
+                />
+
+                <RHFTextField
+                  name="DOCUMNET_CATEGORY"
+                  label={'Document Category'}
+                  sx={{ maxWidth: 320 }}
+                />
+              </Box>
+
+              <Button type='submit'>
+                Add Document
+              </Button>
+
             </Box>
-
-            <Button type='submit'>
-              Add Document
-            </Button>
-
-          </Box>
-        </Card>
-      </FormProvider>
+          </Card>
+        </FormProvider>
 
 
 
 
-      <Stack sx={{ marginTop: 2 }}>
-        <DataGrid
-          rows={uniqueData}
-          columns={columns}
-          pageSizeOptions={[5, 10, 25]}
-          initialState={{
-            pagination: {
-              paginationModel: { pageSize: 5 },
-            },
-          }}
-          onCellClick={(data) => handleDataClick(data)}
-          slots={{
-            toolbar: () => (
-              <GridToolbarContainer>
-                <Card
-                  sx={{
-                    position: 'relative',
-                    overflow: 'unset',
-                  }}
-                >
+        <Stack sx={{ marginTop: 2 }}>
+          <DataGrid
+            rows={uniqueData}
+            columns={columns}
+            pageSizeOptions={[5, 10, 25]}
+            initialState={{
+              pagination: {
+                paginationModel: { pageSize: 5 },
+              },
+            }}
+            onCellClick={(data) => handleDataClick(data, 'paper')}
+            slots={{
+              toolbar: () => (
+                <GridToolbarContainer>
+                  <Card
+                    sx={{
+                      position: 'relative',
+                      overflow: 'unset',
+                    }}
+                  >
 
-                </Card>
-                <Stack
-                  spacing={1}
-                  flexGrow={1}
-                  direction="row"
-                  alignItems="center"
-                  justifyContent="flex-end"
-                >
-                  <GridToolbarQuickFilter />
-                  <GridToolbarFilterButton />
-                  <GridToolbarExport />
-                </Stack>
-              </GridToolbarContainer>
-            ),
-            noRowsOverlay: () => <EmptyContent title={'NO_DATA'} />,
-            noResultsOverlay: () => <EmptyContent title={'NO_RESULT_FOUND'} />,
-          }}
-        />
-      </Stack>
-    </Container>
+                  </Card>
+                  <Stack
+                    spacing={1}
+                    flexGrow={1}
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="flex-end"
+                  >
+                    <GridToolbarQuickFilter />
+                    <GridToolbarFilterButton />
+                    <GridToolbarExport />
+                  </Stack>
+                </GridToolbarContainer>
+              ),
+              noRowsOverlay: () => <EmptyContent title={'NO_DATA'} />,
+              noResultsOverlay: () => <EmptyContent title={'NO_RESULT_FOUND'} />,
+            }}
+          />
+        </Stack>
+      </Container>
+
+
+      {/* DIALOG BOX */}
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        scroll={scroll}
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
+        PaperProps={{
+          sx: {
+            width: '70%', // Adjust the width here
+            maxWidth: 'none',
+            height: '80%'
+          },
+        }}
+
+      >
+        <DialogTitle id="scroll-dialog-title">{selectedRowData?.DOCUMNET_CATEGORY}</DialogTitle>
+
+        <DialogContent dividers={scroll === 'paper'}>
+
+          <DataGrid
+            rows={selectedRowData}
+            columns={columnForDocument}
+            pageSizeOptions={[5, 10, 25]}
+            initialState={{
+              pagination: {
+                paginationModel: { pageSize: 5 },
+              },
+            }}
+            onCellClick={(data) => handleDataClick(data, 'paper')}
+            slots={{
+              toolbar: () => (
+                <GridToolbarContainer>
+                  <Card
+                    sx={{
+                      position: 'relative',
+                      overflow: 'unset',
+                    }}
+                  >
+
+                  </Card>
+                  <Stack
+                    spacing={1}
+                    flexGrow={1}
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="flex-end"
+                  >
+                    <GridToolbarQuickFilter />
+                    <GridToolbarFilterButton />
+                    <GridToolbarExport />
+                  </Stack>
+                </GridToolbarContainer>
+              ),
+              noRowsOverlay: () => <EmptyContent title={'NO_DATA'} />,
+              noResultsOverlay: () => <EmptyContent title={'NO_RESULT_FOUND'} />,
+            }}
+          />
+
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   )
 }
 
