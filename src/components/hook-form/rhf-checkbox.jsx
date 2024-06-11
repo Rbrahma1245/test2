@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
@@ -7,6 +7,7 @@ import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -39,12 +40,20 @@ RHFCheckbox.propTypes = {
 // ----------------------------------------------------------------------
 
 export function RHFMultiCheckbox({ row, name, label, options, spacing, helperText, sx, ...other }) {
-  const { control } = useFormContext();
+  const { control, setValue } = useFormContext();
 
   const getSelected = (selectedItems, item) =>
     selectedItems.includes(item)
       ? selectedItems.filter((value) => value !== item)
       : [...selectedItems, item];
+
+      const selectedOptions = useWatch({ name });
+      useEffect(() => {
+        if (selectedOptions.length > 0 && !selectedOptions.includes('View')) {
+          setValue(name, [...selectedOptions, 'View']);
+        }
+      }, [selectedOptions, setValue, name]);
+
 
   return (
     <Controller

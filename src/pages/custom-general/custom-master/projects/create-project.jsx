@@ -293,7 +293,7 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, Chip, Container, List, ListItemText, MenuItem, OutlinedInput, Paper, Select, Stack, Typography } from '@mui/material'
 import * as Yup from 'yup';
 import React, { useEffect, useMemo, useState } from 'react'
-import { RHFSelect, RHFTextField, RHFAutocomplete } from '../../../../components/hook-form'
+import { RHFSelect, RHFTextField, RHFAutocomplete, RHFMultiCheckbox } from '../../../../components/hook-form'
 import { LEAD_OPTIONS } from '../../../../_mock/_projects'
 import FormProvider from '../../../../components/hook-form'
 import { useForm } from 'react-hook-form';
@@ -314,11 +314,11 @@ function CreateProject() {
 
   // VALIDATION
   const createProjectSchema = Yup.object().shape({
-    projectCode: Yup.string().required('Please provide project code'),
-    projectName: Yup.string().required('Please provide project name'),
-    projectLead: Yup.string().required('Please provide project lead'),
-    projectDescription: Yup.string().required('Please provide project description'),
-    category: Yup.array().min(1, 'Please provide at least one category'),
+    // projectCode: Yup.string().required('Please provide project code'),
+    // projectName: Yup.string().required('Please provide project name'),
+    // projectLead: Yup.string().required('Please provide project lead'),
+    // projectDescription: Yup.string().required('Please provide project description'),
+    // category: Yup.array().min(1, 'Please provide at least one category'),
 
   });
 
@@ -330,7 +330,9 @@ function CreateProject() {
       projectLead: '',
       projectDescription: '',
 
-      testEmail: ""
+      testEmail: "",
+
+      actionList:[]
 
 
       // email: "",
@@ -369,24 +371,24 @@ function CreateProject() {
   const onSubmit = handleSubmit(async (data) => {
     console.log(data);
 
-    const categoryObject = data.category.reduce((acc, cur) => {
-      acc[cur] = cur;
-      return acc;
-    }, {});
+    // const categoryObject = data.category.reduce((acc, cur) => {
+    //   acc[cur] = cur;
+    //   return acc;
+    // }, {});
 
-    const updateCategoryObject = data.category.reduce((acc, cur) => {
-      acc[cur.toLowerCase()] = [];
-      return acc;
-    }, {});
+    // const updateCategoryObject = data.category.reduce((acc, cur) => {
+    //   acc[cur.toLowerCase()] = [];
+    //   return acc;
+    // }, {});
 
-    // console.log(updateCategoryObject);
+    // // console.log(updateCategoryObject);
 
 
-    setFormVal({
-      ...data,
-      ...categoryObject,
-      ...updateCategoryObject
-    });
+    // setFormVal({
+    //   ...data,
+    //   ...categoryObject,
+    //   ...updateCategoryObject
+    // });
 
   });
 
@@ -451,6 +453,12 @@ function CreateProject() {
     setOpen(false);
   };
 
+  const multiSelectOption = [
+    { label: 'Add', value: 'Add' },
+    { label: 'Update', value: 'Update' },
+    { label: 'Delete', value: 'Delete' },
+    { label: 'View', value: 'View' },
+];
 
 
 
@@ -562,6 +570,9 @@ function CreateProject() {
               />
             </Box>
           </Box>
+
+          <RHFMultiCheckbox row name="actionList" spacing={2} options={multiSelectOption} />
+
 
           <Box mt={5}>
             <Button type='submit' variant="contained">
