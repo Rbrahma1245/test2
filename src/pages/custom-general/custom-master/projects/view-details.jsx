@@ -345,6 +345,14 @@ function ViewProjectDetails() {
 
   let [projectData, setProjectData] = useState([])
   let [filterProjectData, setFilterProjectData] = useState([])
+  const ACCESS = [
+    { DOCUMNET_CATEGORY: "CLIENT", ACTIONS: ["ADD", "UPDATE"] },
+    { DOCUMNET_CATEGORY: "SERVER", ACTIONS: ["ADD", "UPDATE", "DELETE"] }
+  ]
+
+
+
+
 
 
 
@@ -512,17 +520,14 @@ function ViewProjectDetails() {
     if (params.field === "DOCUMNET_CATEGORY") {
       console.log(params.row);
 
-      let filter = projectData.filter((e)=> e.DOCUMNET_CATEGORY === params.row.DOCUMNET_CATEGORY)
-      
+      let filter = projectData.filter((e) => e.DOCUMNET_CATEGORY === params.row.DOCUMNET_CATEGORY)
+
       setSelectedRowData(filter)
 
       setOpen(true);
       setScroll(scrollType);
-
     }
 
-
-    // console.log(data.row);
   };
 
 
@@ -540,7 +545,11 @@ function ViewProjectDetails() {
 
   const uniqueData = Object.values(uniqueTitles);
 
+
+
+  console.log(ACCESS, "ACCESS");
   console.log(uniqueData, "unique");
+
 
 
   const columns = [
@@ -581,7 +590,27 @@ function ViewProjectDetails() {
         }
 
 
-        return [
+        // return [
+        //   <GridActionsCellItem
+        //     icon={<Iconify icon="solar:pen-bold" />}
+        //     label='EDIT_TEXT'
+        //     className="textPrimary"
+        //     onClick={(e) => {
+        //       handleEditClick({ params: params.row, e });
+        //     }}
+        //     color="inherit"
+        //   />,
+        //   <GridActionsCellItem
+        //     icon={<Iconify icon="solar:trash-bin-trash-bold" />}
+        //     label='DELETE_TEXT'
+        //     onClick={(e) => {
+        //       handleDeleteClick({ params: params.row, e })
+        //     }}
+        //     sx={{ color: 'error.main' }}
+        //   />,
+        // ];
+
+        const editButton = (
           <GridActionsCellItem
             icon={<Iconify icon="solar:pen-bold" />}
             label='EDIT_TEXT'
@@ -590,7 +619,10 @@ function ViewProjectDetails() {
               handleEditClick({ params: params.row, e });
             }}
             color="inherit"
-          />,
+          />
+        );
+
+        const deleteButton = (
           <GridActionsCellItem
             icon={<Iconify icon="solar:trash-bin-trash-bold" />}
             label='DELETE_TEXT'
@@ -598,25 +630,27 @@ function ViewProjectDetails() {
               handleDeleteClick({ params: params.row, e })
             }}
             sx={{ color: 'error.main' }}
-          />,
-        ];
+          />
+        );
 
-        // return [
-        //   <GridActionsCellItem
-        //     icon={<Iconify icon="solar:pen-bold" />}
-        //     label={'EDIT_TEXT'}
-        //     className="textPrimary"
-        //     onClick={(e) => {
-        //       handleEditClick(params.row, params.id);
-        //     }}
-        //     color="inherit"
-        //   />,
-        // ];
+        const actions = [];
+
+
+        const documentCategory = params.row.DOCUMNET_CATEGORY.toUpperCase();
+        const clientDoc = ACCESS.find(doc => doc.DOCUMNET_CATEGORY.toUpperCase() === documentCategory);
+
+        if (clientDoc && clientDoc.ACTIONS && clientDoc.ACTIONS.includes('UPDATE')) {
+          actions.push(editButton)
+        } 
+
+        if (clientDoc && clientDoc.ACTIONS && clientDoc.ACTIONS.includes('DELETE')) {
+          actions.push(deleteButton)
+        } 
+       
+        return actions;
       },
     },
   ];
-
-
 
   const columnForDocument = [
     { field: 'TITLE', headerName: 'Title', hide: true, width: 200, cellClassName: 'unclickable-column' },
@@ -669,10 +703,6 @@ function ViewProjectDetails() {
 
         ];
       },
-      
-
- 
-      
     },
   ];
 
