@@ -323,7 +323,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useRouter } from '../../../../routes/hooks';
 import axios from 'axios';
-import { Box, Button, Card, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, MenuItem, Stack, Typography } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import Iconify from '../../../../components/iconify/iconify';
 import EmptyContent from '../../../../components/empty-content';
@@ -331,7 +331,7 @@ import FormProvider from '../../../../components/hook-form/form-provider';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import { RHFTextField } from '../../../../components/hook-form';
+import { RHFSelect, RHFTextField } from '../../../../components/hook-form';
 import { v4 as uuidv4 } from "uuid";
 import "./overwrite.css"
 import Swal from 'sweetalert2';
@@ -347,7 +347,9 @@ function ViewProjectDetails() {
   let [filterProjectData, setFilterProjectData] = useState([])
   const ACCESS = [
     { DOCUMNET_CATEGORY: "CLIENT", ACTIONS: ["ADD", "UPDATE"] },
-    { DOCUMNET_CATEGORY: "SERVER", ACTIONS: ["ADD", "UPDATE", "DELETE"] }
+    { DOCUMNET_CATEGORY: "SERVER", ACTIONS: ["ADD", "UPDATE", "DELETE"] },
+    { DOCUMNET_CATEGORY: "DATABASE", ACTIONS: ["DELETE"] }
+
   ]
 
 
@@ -641,12 +643,12 @@ function ViewProjectDetails() {
 
         if (clientDoc && clientDoc.ACTIONS && clientDoc.ACTIONS.includes('UPDATE')) {
           actions.push(editButton)
-        } 
+        }
 
         if (clientDoc && clientDoc.ACTIONS && clientDoc.ACTIONS.includes('DELETE')) {
           actions.push(deleteButton)
-        } 
-       
+        }
+
         return actions;
       },
     },
@@ -706,6 +708,26 @@ function ViewProjectDetails() {
     },
   ];
 
+const docCategoryCode =[
+  {label: "Client", value : "Client"},
+  {label: "Server", value : "Server"},
+  {label: "Database", value : "Database"},
+  {label: "Management", value : "Management"},
+  {label: "Technical", value : "Technical"},
+]
+
+let docCategory = []
+
+docCategoryCode.forEach(serverDoc => {
+  const clientDoc = ACCESS.find(doc => doc.DOCUMNET_CATEGORY === serverDoc.value.toUpperCase());
+  if (clientDoc) {
+
+      if (clientDoc.ACTIONS && clientDoc.ACTIONS.includes('ADD')) {
+        docCategory.push({label:serverDoc.value, value:serverDoc.value})
+          console.log('DELETE action is present for the matched document.');
+      }
+  }
+});
 
 
 
@@ -753,11 +775,20 @@ function ViewProjectDetails() {
                   sx={{ maxWidth: 320 }}
                 />
 
-                <RHFTextField
+                {/* <RHFTextField
                   name="DOCUMNET_CATEGORY"
                   label={'Document Category'}
                   sx={{ maxWidth: 320 }}
-                />
+                /> */}
+
+                <RHFSelect name="DOCUMNET_CATEGORY" label='Document Category' sx={{ maxWidth: 320 }}>
+                  {console.log(docCategory, "mapppp")}
+                  {docCategory?.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </RHFSelect>
               </Box>
 
               <Button type='submit'>

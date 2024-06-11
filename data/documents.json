@@ -79,6 +79,13 @@
       "DOCUMNET_CATEGORY": "Server",
       "VERSION": 2,
       "id": "2b18c676-69e8-4P8D-8580-aDC31af0dccM"
+    },
+    {
+      "id": "2f338cfa-c71f-404e-b505-ae16445d9760",
+      "TITLE": "Database Test",
+      "FILE_NAME": "database.pdf",
+      "DESCRIPTION": "This is text for database",
+      "DOCUMNET_CATEGORY": "Database"
     }
   ]
 }
