@@ -28,6 +28,24 @@
       "PROJECT_LEAD_EMAIL":"raj@appstec.in"
     },
     {
+      "id": "7",
+      "PROJECT_ID": "7",
+      "PROJECT_CODE": "MTK",
+      "PROJECT_NAME":"Management Task Sysytem",
+      "PROJECT_DESCRIPTION":"Management task Sysytem 1",
+      "PROJECT_LEAD":"Rahul (Project Lead)",
+      "PROJECT_LEAD_EMAIL":"rahul@appstec.in"
+    },
+    {
+      "id": "8",
+      "PROJECT_ID": "8",
+      "PROJECT_CODE": "NAPCO",
+      "PROJECT_NAME":"NAPCO",
+      "PROJECT_DESCRIPTION":"Non Add Coperative 1",
+      "PROJECT_LEAD":"Praveen (Project Lead)",
+      "PROJECT_LEAD_EMAIL":"praveen@appstec.in"
+    },
+    {
       "id": "4",
       "PROJECT_ID": "4",
       "PROJECT_CODE": "ELIT",
@@ -54,5 +72,6 @@
       "PROJECT_LEAD":"Praveen (Project Lead)",
       "PROJECT_LEAD_EMAIL":"raj@appstec.in"
     }
+   
   ]
 }

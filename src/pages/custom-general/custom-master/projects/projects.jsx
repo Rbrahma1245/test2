@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Card, Stack, Button, Backdrop, Container } from '@mui/material';
 import {
   DataGrid,
@@ -16,6 +16,7 @@ import EmptyContent from '../../../../components/empty-content';
 import { LoadingScreen } from '../../../../components/loading-screen';
 import { useRouter } from '../../../../routes/hooks';
 import axios from 'axios';
+import { debounce } from 'lodash';
 
 function Project() {
 
@@ -28,16 +29,18 @@ function Project() {
 
   const fetchData = async () => {
     try {
-        const { data } = await axios.get("http://localhost:5001/PROJECT_DETAILS_ROW");
-        setProjectData(data);
+      const { data } = await axios.get("http://localhost:5001/PROJECT_DETAILS_ROW");
+      setProjectData(data);
     } catch (error) {
-        console.error("Error fetching data:", error);
+      console.error("Error fetching data:", error);
     }
-};
+  };
 
-useEffect(() => {
+  useEffect(() => {
     fetchData();
-}, []);
+  }, []);
+
+  // console.log(projectData, "llllllllllll");
 
   //
 
@@ -58,16 +61,18 @@ useEffect(() => {
     projectDescription: extractInnerText(row.projectDescription),
   }));
 
-let ACCESS = [
-  {DOCUMNET_NAME: "ELIT"},
-  {DOCUMNET_NAME: "DMS"},
-]
+  let ACCESS = [
+    { DOCUMNET_NAME: "ELIT" },
+    { DOCUMNET_NAME: "DMS" },
+    { DOCUMNET_NAME: "MTK" },
+    { DOCUMNET_NAME: "NAPCO" },
+  ]
 
-const matching = projectData.filter(doc =>
-  ACCESS.some(access => access.DOCUMNET_NAME === doc.PROJECT_CODE)
-);
+  const matching = projectData.filter(doc =>
+    ACCESS.some(access => access.DOCUMNET_NAME === doc.PROJECT_CODE)
+  );
 
-// console.log(matching, "match data");
+  // console.log(matching, "match data");
 
 
   const columns = [
@@ -107,27 +112,27 @@ const matching = projectData.filter(doc =>
           ];
         }
 
-     
-          return [
-            <GridActionsCellItem
-              icon={<Iconify icon="solar:pen-bold" />}
-              label='EDIT_TEXT'
-              className="textPrimary"
-              onClick={(e) => {
-                handleEditClick(params.row, params.id);
-              }}
-              color="inherit"
-            />,
-            <GridActionsCellItem
-              icon={<Iconify icon="solar:trash-bin-trash-bold" />}
-              label='DELETE_TEXT'
-              onClick={(e) => {
-                // handleDelete(params.row)
-              }}
-              sx={{ color: 'error.main' }}
-            />,
-          ];
-      
+
+        return [
+          <GridActionsCellItem
+            icon={<Iconify icon="solar:pen-bold" />}
+            label='EDIT_TEXT'
+            className="textPrimary"
+            onClick={(e) => {
+              handleEditClick(params.row, params.id);
+            }}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            icon={<Iconify icon="solar:trash-bin-trash-bold" />}
+            label='DELETE_TEXT'
+            onClick={(e) => {
+              // handleDelete(params.row)
+            }}
+            sx={{ color: 'error.main' }}
+          />,
+        ];
+
         // return [
         //   <GridActionsCellItem
         //     icon={<Iconify icon="solar:pen-bold" />}
@@ -148,6 +153,38 @@ const matching = projectData.filter(doc =>
     router.push(`/viewDetails/${data.row.PROJECT_ID}`);
   };
 
+
+  // 
+  const [filterModel, setFilterModel] = useState({
+    items: []
+  });
+
+
+  useEffect(() => {
+    const savedFilterModel = localStorage.getItem('filterModel');
+
+    if (savedFilterModel) {
+      setFilterModel(JSON.parse(savedFilterModel));
+    }
+  }, []);
+
+  const handleFilterChange = (searchInput) => {
+    setFilterModel(searchInput)
+    localStorage.setItem('filterModel', JSON.stringify(searchInput));
+  };
+
+
+  const quickFilterRef = useRef(null); 
+
+  useEffect(() => {
+    // Focus on the quick filter input when the component renders or when filtering occurs
+    if (quickFilterRef.current) {
+      quickFilterRef.current.focus();
+    }
+  }, [filterModel]); // Ensure useEffect runs when filterModel changes
+
+  //
+
   return (
     <>
       <Backdrop open={backDropState} sx={{ zIndex: 1200 }} />
@@ -164,6 +201,11 @@ const matching = projectData.filter(doc =>
             <DataGrid
               rows={matching}
               columns={columns}
+
+              filterModel={filterModel}
+              onFilterModelChange={handleFilterChange}
+
+
               pageSizeOptions={[5, 10, 25]}
               initialState={{
                 pagination: {
@@ -197,7 +239,10 @@ const matching = projectData.filter(doc =>
                       alignItems="center"
                       justifyContent="flex-end"
                     >
-                      <GridToolbarQuickFilter />
+                      <GridToolbarQuickFilter          
+                        debounceMs={500} // time before applying the new quick filter value
+                        inputRef={quickFilterRef} 
+                      />
                       <GridToolbarFilterButton />
                       <GridToolbarExport />
                     </Stack>
