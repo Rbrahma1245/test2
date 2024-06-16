@@ -293,7 +293,7 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, Chip, Container, List, ListItemText, MenuItem, OutlinedInput, Paper, Select, Stack, Typography } from '@mui/material'
 import * as Yup from 'yup';
 import React, { useEffect, useMemo, useState } from 'react'
-import { RHFSelect, RHFTextField, RHFAutocomplete, RHFMultiCheckbox } from '../../../../components/hook-form'
+import { RHFSelect, RHFTextField, RHFAutocomplete, RHFMultiCheckbox, CustomRHFTextField } from '../../../../components/hook-form'
 import { LEAD_OPTIONS } from '../../../../_mock/_projects'
 import FormProvider from '../../../../components/hook-form'
 import { useForm } from 'react-hook-form';
@@ -320,6 +320,17 @@ function CreateProject() {
     // projectDescription: Yup.string().required('Please provide project description'),
     // category: Yup.array().min(1, 'Please provide at least one category'),
 
+    projectCodeTest: Yup.string()
+    .matches(/^[A-Z0-9_-]*$/, 'Only uppercase letters , numbers, underscores, and hyphens are allowed, with no spaces')
+    .min(3, 'Project code must be at least 3 characters')
+    .required('Project code is required')
+    .nullable()
+    .test(
+      'is-valid-length',
+      'Project code must be at least 3 characters',
+      value => value === null || value === '' || value.length >= 3
+    ),
+
   });
 
   const defaultValues = useMemo(
@@ -332,7 +343,9 @@ function CreateProject() {
 
       testEmail: "",
 
-      actionList:[]
+      projectCodeTest:"",
+
+      actionList: []
 
 
       // email: "",
@@ -458,7 +471,7 @@ function CreateProject() {
     { label: 'Update', value: 'Update' },
     { label: 'Delete', value: 'Delete' },
     { label: 'View', value: 'View' },
-];
+  ];
 
 
 
@@ -501,6 +514,12 @@ function CreateProject() {
                   </List>
                 </Paper>
               )}
+
+              <CustomRHFTextField
+                name="projectCodeTest"
+                label={'PROJECT_CODE_TEST'}
+                sx={{ maxWidth: 320 }}
+              />
 
 
 
