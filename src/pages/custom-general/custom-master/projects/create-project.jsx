@@ -321,15 +321,15 @@ function CreateProject() {
     // category: Yup.array().min(1, 'Please provide at least one category'),
 
     projectCodeTest: Yup.string()
-    .matches(/^[A-Z0-9_-]*$/, 'Only uppercase letters , numbers, underscores, and hyphens are allowed, with no spaces')
-    .min(3, 'Project code must be at least 3 characters')
-    .required('Project code is required')
-    .nullable()
-    .test(
-      'is-valid-length',
-      'Project code must be at least 3 characters',
-      value => value === null || value === '' || value.length >= 3
-    ),
+      .matches(/^[A-Z0-9_-]*$/, 'Only uppercase letters , numbers, underscores, and hyphens are allowed, with no spaces')
+      .min(3, 'Project code must be at least 3 characters')
+      .required('Project code is required')
+      .nullable()
+      .test(
+        'is-valid-length',
+        'Project code must be at least 3 characters',
+        value => value === null || value === '' || value.length >= 3
+      ),
 
   });
 
@@ -343,7 +343,7 @@ function CreateProject() {
 
       testEmail: "",
 
-      projectCodeTest:"",
+      projectCodeTest: "",
 
       actionList: []
 
@@ -579,15 +579,14 @@ function CreateProject() {
               />
             </Box>
 
-
-
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, mt: 3 }}>
-              <RHFTextField
-                name="projectDescription"
-                placeholder="Write project description..."
-                style={{ width: '84%', height: 30, resize: "vertical" }}
-              />
-            </Box>
+            <RHFTextField
+              name="projectDescription"
+              label={'Project Description'}
+              placeholder="Write project description..."
+              multiline
+              rows={4}
+              sx={{ mt: 5 }}
+            />
           </Box>
 
           <RHFMultiCheckbox row name="actionList" spacing={2} options={multiSelectOption} />
