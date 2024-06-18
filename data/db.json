@@ -7,7 +7,8 @@
       "PROJECT_NAME":"DMS",
       "PROJECT_DESCRIPTION":"Database Management Sysytem Testing title 1",
       "PROJECT_LEAD":"Shuaib (Project Lead)",
-      "PROJECT_LEAD_EMAIL":"shuaib@appstec.in"
+      "PROJECT_LEAD_EMAIL":"shuaib@appstec.in",
+      "ROLE" : "Developer"
     },
     {
       "id": "2",
@@ -16,7 +17,9 @@
       "PROJECT_NAME":"ELIT Test",
       "PROJECT_DESCRIPTION":"ELIT Testing title",
       "PROJECT_LEAD":"Rajshekar (Project Lead)",
-      "PROJECT_LEAD_EMAIL":"raj@appstec.in"
+      "PROJECT_LEAD_EMAIL":"raj@appstec.in",
+      "ROLE" : "Lead"
+
     },
     {
       "id": "3",
@@ -25,7 +28,9 @@
       "PROJECT_NAME":"ELIT Test 1",
       "PROJECT_DESCRIPTION":"ELIT Testing title  testing 1",
       "PROJECT_LEAD":"Praveen (Project Lead)",
-      "PROJECT_LEAD_EMAIL":"raj@appstec.in"
+      "PROJECT_LEAD_EMAIL":"raj@appstec.in",
+      "ROLE" : "Developer"
+
     },
     {
       "id": "7",
@@ -34,7 +39,9 @@
       "PROJECT_NAME":"Management Task Sysytem",
       "PROJECT_DESCRIPTION":"Management task Sysytem 1",
       "PROJECT_LEAD":"Rahul (Project Lead)",
-      "PROJECT_LEAD_EMAIL":"rahul@appstec.in"
+      "PROJECT_LEAD_EMAIL":"rahul@appstec.in",
+      "ROLE" : "Lead"
+
     },
     {
       "id": "8",
@@ -43,7 +50,9 @@
       "PROJECT_NAME":"NAPCO",
       "PROJECT_DESCRIPTION":"Non Add Coperative 1",
       "PROJECT_LEAD":"Praveen (Project Lead)",
-      "PROJECT_LEAD_EMAIL":"praveen@appstec.in"
+      "PROJECT_LEAD_EMAIL":"praveen@appstec.in",
+      "ROLE" : "Developer"
+
     },
     {
       "id": "4",
@@ -52,7 +61,9 @@
       "PROJECT_NAME":"ELIT Test 2",
       "PROJECT_DESCRIPTION":"ELIT Testing title testing 2",
       "PROJECT_LEAD":"Himam (Project Lead)",
-      "PROJECT_LEAD_EMAIL":"raj@appstec.in"
+      "PROJECT_LEAD_EMAIL":"raj@appstec.in",
+      "ROLE" : "Developer"
+
     },
     {
       "id": "5",
@@ -61,7 +72,9 @@
       "PROJECT_NAME":"Tech Guard",
       "PROJECT_DESCRIPTION":"TechGuard: Fortifying Digital Frontiers for Secure Connectivity",
       "PROJECT_LEAD":"Vinay (Project Lead)",
-      "PROJECT_LEAD_EMAIL":"raj@appstec.in"
+      "PROJECT_LEAD_EMAIL":"raj@appstec.in",
+      "ROLE" : "Lead"
+
     },
     {
       "id": "6",
@@ -70,7 +83,9 @@
       "PROJECT_NAME":"ELIT Test",
       "PROJECT_DESCRIPTION":"ELIT Test",
       "PROJECT_LEAD":"Praveen (Project Lead)",
-      "PROJECT_LEAD_EMAIL":"raj@appstec.in"
+      "PROJECT_LEAD_EMAIL":"raj@appstec.in",
+      "ROLE" : "Lead"
+
     }
    
   ]

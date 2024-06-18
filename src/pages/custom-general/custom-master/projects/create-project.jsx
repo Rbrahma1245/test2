@@ -345,7 +345,9 @@ function CreateProject() {
 
       projectCodeTest: "",
 
-      actionList: []
+      actionList: [],
+
+      role:""
 
 
       // email: "",
@@ -373,6 +375,7 @@ function CreateProject() {
     reset,
     // control,
     setValue,
+    watch,
 
     handleSubmit,
     formState: { isSubmitting, errors },
@@ -473,6 +476,24 @@ function CreateProject() {
     { label: 'View', value: 'View' },
   ];
 
+  // Role should not be editable
+
+
+  const ROLE_OPTIONS = [
+    { label: 'Developer', value: 'Developer' },
+    { label: 'Lead', value: 'Lead' },
+  ];
+  const projectLead = watch('projectLead');
+  const [isRoleReadOnly, setIsRoleReadOnly] = useState(false);
+
+  useEffect(() => {
+    if (projectLead && projectLead !== 'Neeranjan (Project Lead)') {
+      setValue('role', 'Developer');
+      setIsRoleReadOnly(true);
+    } else {
+      setIsRoleReadOnly(false);
+    }
+  }, [projectLead, setValue]);
 
 
   return (
@@ -548,6 +569,20 @@ function CreateProject() {
                   </MenuItem>
                 ))}
               </RHFSelect>
+
+              <RHFSelect
+                name="role"
+                label={'Role'}
+                sx={{ textAlign: 'left', maxWidth: 320 }}
+                disabled={isRoleReadOnly}
+              >
+                {ROLE_OPTIONS.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </RHFSelect>
+
             </Box>
             <Box sx={{ mt: 5 }}>
               <RHFAutocomplete
