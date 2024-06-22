@@ -177,13 +177,12 @@ function Project() {
   const quickFilterRef = useRef(null); 
 
   useEffect(() => {
-    // Focus on the quick filter input when the component renders or when filtering occurs
+
     if (quickFilterRef.current) {
       quickFilterRef.current.focus();
     }
-  }, [filterModel]); // Ensure useEffect runs when filterModel changes
+  }, []);
 
-  //
 
   return (
     <>
