@@ -161,7 +161,7 @@ function Project() {
 
 
   useEffect(() => {
-    const savedFilterModel = localStorage.getItem('filterModel');
+    const savedFilterModel = sessionStorage.getItem('filterModel');
 
     if (savedFilterModel) {
       setFilterModel(JSON.parse(savedFilterModel));
@@ -170,7 +170,7 @@ function Project() {
 
   const handleFilterChange = (searchInput) => {
     setFilterModel(searchInput)
-    localStorage.setItem('filterModel', JSON.stringify(searchInput));
+    sessionStorage.setItem('filterModel', JSON.stringify(searchInput));
   };
 
 
@@ -181,7 +181,9 @@ function Project() {
     if (quickFilterRef.current) {
       quickFilterRef.current.focus();
     }
-  }, []);
+  }, [filterModel.quickFilterValues]);
+
+  console.log(filterModel.quickFilterValues, "filetrrrrrrrr");
 
 
   return (

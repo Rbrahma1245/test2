@@ -321,7 +321,7 @@ function CreateProject() {
     // category: Yup.array().min(1, 'Please provide at least one category'),
 
     projectCodeTest: Yup.string()
-      .matches(/^[A-Z0-9_-]*$/, 'Only uppercase letters , numbers, underscores, and hyphens are allowed, with no spaces')
+      // .matches(/^[0-9_-]*$/, 'Only underscores and hyphens are allowed, with no spaces')
       .min(3, 'Project code must be at least 3 characters')
       .required('Project code is required')
       .nullable()
@@ -433,7 +433,7 @@ function CreateProject() {
   // EMAIL TESTING
 
   let emailList = [
-    "arun@gmail.com", "mike@gmail.com", "rahul@gmail.com", "john@gmail.com", "test@gmail.com",
+    "ANARY", "mike@gmail.com", "rahul@gmail.com", "john@gmail.com", "test@gmail.com",
     "Dhan@gmail.com", "Jane@gmail.com", "Chaya@gmail.com", "Test2@gmail.com", "Tes5@gmail.com",
     "Dipankar@gmail.com", "Mayank@gmail.com", "Kim@gmail.com"
   ]
@@ -448,11 +448,13 @@ function CreateProject() {
     setOpen(true);
   };
 
+  const [inputType, setInputType] = useState('email');
 
 
   const handleSuggestionClick = (data) => {
     console.log(data, 'from handle suggestion');
     setValue('testEmail', data);
+    setInputType('text');
 
     setOpen(false);
   };
@@ -516,7 +518,7 @@ function CreateProject() {
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
               <RHFTextField
                 name="testEmail"
-                type="email"
+                type={inputType}
                 label='Email'
                 onFocus={handleFocus}
                 sx={{ maxWidth: 320 }}
@@ -540,6 +542,8 @@ function CreateProject() {
                 name="projectCodeTest"
                 label={'PROJECT_CODE_TEST'}
                 sx={{ maxWidth: 320 }}
+                capitalText
+                maxLength={5}
               />
 
 
