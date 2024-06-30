@@ -463,6 +463,7 @@ function CreateProject() {
     const filtered = emailList.filter((email) =>
       email.toLowerCase().includes(value.toLowerCase())
     );
+    setInputType('email')
     setFilteredSuggestions(filtered);
     setOpen(true)
   };
