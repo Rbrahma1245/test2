@@ -183,7 +183,6 @@ function Project() {
     }
   }, [filterModel.quickFilterValues]);
 
-  console.log(filterModel.quickFilterValues, "filetrrrrrrrr");
 
 
   return (

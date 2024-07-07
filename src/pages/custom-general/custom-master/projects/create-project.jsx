@@ -292,7 +292,7 @@
 
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, Chip, Container, List, ListItemText, MenuItem, OutlinedInput, Paper, Select, Stack, Typography } from '@mui/material'
 import * as Yup from 'yup';
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { RHFSelect, RHFTextField, RHFAutocomplete, RHFMultiCheckbox, CustomRHFTextField } from '../../../../components/hook-form'
 import { LEAD_OPTIONS } from '../../../../_mock/_projects'
 import FormProvider from '../../../../components/hook-form'
@@ -302,6 +302,7 @@ import { useRouter } from '../../../../routes/hooks';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { isObjectEmpty } from '../utils';
 import Invite from './invite';
+import ConfirmDialog from '../../../../components/custom-dialog/confirm-dialog';
 
 
 function CreateProject() {
@@ -346,8 +347,9 @@ function CreateProject() {
       projectCodeTest: "",
 
       actionList: [],
+      category: [],
 
-      role:""
+      role: ""
 
 
       // email: "",
@@ -498,12 +500,45 @@ function CreateProject() {
     }
   }, [projectLead, setValue]);
 
+  // TEST
 
+  const [openDialogBox, setOpenDialogBox] = useState(false)
+  const [selectedValues, setSelectedValues] = useState([]);
+  const [optionToRemove, setOptionToRemove] = useState(null);
+
+  const handleOptionChange = useCallback((event, value) => {
+    const removedOption = selectedValues.find(option => !value.includes(option));
+
+    if (removedOption) {
+      setOptionToRemove(removedOption);
+      setOpenDialogBox(true);
+    } else {
+      setSelectedValues(value);
+    }
+
+  }, [selectedValues]);
+
+
+
+  // REMOVE DOC CATEGORY
+  const handleConfirmRemove = () => {
+
+    setSelectedValues(prevValues => prevValues.filter(option => option !== optionToRemove));
+    setOpenDialogBox(false);
+    setOptionToRemove(null);
+  };
+
+  const handleCancelRemove = () => {
+    setOpenDialogBox(false);
+    setOptionToRemove(null);
+  };
+
+  // TEST
   return (
-    <Container>
+    <><Container>
 
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <Card sx={{ p: 3, textAlign: 'center', width: 1200 }} >
+        <Card sx={{ p: 3, textAlign: 'center', width: 1200 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant="h5">{'Create Project'}</Typography>
             <Button
@@ -525,8 +560,7 @@ function CreateProject() {
                 sx={{ maxWidth: 320 }}
                 onChange={handleInputChange}
                 onBlur={handleBlur}
-                autoComplete="off"
-              />
+                autoComplete="off" />
               {open && filteredSuggestions.length > 0 && (
                 <Paper sx={{ position: 'absolute', width: '29%', zIndex: 1, mt: 6 }}>
                   <List sx={{ border: 1, borderColor: 'grey.400', borderRadius: 1, overflowY: 'auto', maxHeight: '200px' }}>
@@ -544,8 +578,7 @@ function CreateProject() {
                 label={'PROJECT_CODE_TEST'}
                 sx={{ maxWidth: 320 }}
                 capitalText
-                maxLength={5}
-              />
+                maxLength={5} />
 
 
 
@@ -553,13 +586,11 @@ function CreateProject() {
               <RHFTextField
                 name="projectCode"
                 label={'PROJECT_CODE'}
-                sx={{ maxWidth: 320 }}
-              />
+                sx={{ maxWidth: 320 }} />
               <RHFTextField
                 name="projectName"
                 label={'PROJECT_NAME'}
-                sx={{ maxWidth: 320 }}
-              />
+                sx={{ maxWidth: 320 }} />
 
               {/* PROJECT LEAD */}
 
@@ -596,7 +627,6 @@ function CreateProject() {
                 placeholder="+ category"
                 multiple
                 freeSolo
-                // sx={{ width: 320 }}
                 options={docCategory.map((option) => option)}
                 getOptionLabel={(option) => option}
                 renderOption={(props, option) => (
@@ -604,19 +634,17 @@ function CreateProject() {
                     {option}
                   </li>
                 )}
-                renderTags={(selected, getTagProps) =>
-                  selected.map((option, index) => (
-                    <Chip
-                      {...getTagProps({ index })}
-                      key={option}
-                      label={option}
-                      size="small"
-                      color="info"
-                      variant="soft"
-                    />
-                  ))
-                }
-              />
+                renderTags={(selected, getTagProps) => selected.map((option, index) => (
+                  <Chip
+                    {...getTagProps({ index })}
+                    key={option}
+                    label={option}
+                    size="small"
+                    color="info"
+                    variant="soft" />
+                ))}
+                value={selectedValues}
+                onChange={handleOptionChange} />
             </Box>
 
             <RHFTextField
@@ -625,8 +653,7 @@ function CreateProject() {
               placeholder="Write project description..."
               multiline
               rows={4}
-              sx={{ mt: 5 }}
-            />
+              sx={{ mt: 5 }} />
           </Box>
 
           <RHFMultiCheckbox row name="actionList" spacing={2} options={multiSelectOption} />
@@ -639,48 +666,59 @@ function CreateProject() {
           </Box>
 
           {/* {
-            formVal == undefined ? "" : <Invite formVal={formVal} />
-          } */}
+      formVal == undefined ? "" : <Invite formVal={formVal} />
+    } */}
 
 
           {/* <Accordion>
-            <AccordionSummary
-              expandIcon={isObjectEmpty(errors) ? <ExpandMoreIcon /> : ""}
-              onClick={() => onSubmit()}
-            >
-              INVITE
+      <AccordionSummary
+        expandIcon={isObjectEmpty(errors) ? <ExpandMoreIcon /> : ""}
+        onClick={() => onSubmit()}
+      >
+        INVITE
 
-            </AccordionSummary>
-            {
-              isObjectEmpty(errors) &&
-              <AccordionDetails>
+      </AccordionSummary>
+      {
+        isObjectEmpty(errors) &&
+        <AccordionDetails>
 
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-                  <RHFTextField
-                    name="email"
-                    label={'Email'}
-                    sx={{ maxWidth: 320 }}
-                  />
-                  <RHFTextField
-                    name="roleCode"
-                    label={'Role Code'}
-                    sx={{ maxWidth: 320 }}
-                  />
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+            <RHFTextField
+              name="email"
+              label={'Email'}
+              sx={{ maxWidth: 320 }}
+            />
+            <RHFTextField
+              name="roleCode"
+              label={'Role Code'}
+              sx={{ maxWidth: 320 }}
+            />
 
-                  <Button type="submit">
-                    Invite
-                  </Button>
-                </Box>
-              </AccordionDetails>
-            }
+            <Button type="submit">
+              Invite
+            </Button>
+          </Box>
+        </AccordionDetails>
+      }
 
-          </Accordion> */}
+    </Accordion> */}
 
 
         </Card>
       </FormProvider>
 
     </Container>
+
+
+      <ConfirmDialog
+        open={openDialogBox}
+        onClose={handleCancelRemove}
+        title={'DELETE'}
+        content={"R U sure U want to delete"}
+        action={<Button onClick={() => handleConfirmRemove()} variant="contained" color="primary">
+          {'DELETE'}
+        </Button>} />
+    </>
   )
 }
 
