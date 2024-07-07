@@ -506,18 +506,26 @@ function CreateProject() {
   const [selectedValues, setSelectedValues] = useState([]);
   const [optionToRemove, setOptionToRemove] = useState(null);
 
+  // ATTACHMENT
+  const ATTACHMENT = [
+    { DOC_CATEGORY: "Client" },
+  ]
+
   const handleOptionChange = useCallback((event, value) => {
     const removedOption = selectedValues.find(option => !value.includes(option));
-
+  
     if (removedOption) {
-      setOptionToRemove(removedOption);
-      setOpenDialogBox(true);
-    } else {
-      setSelectedValues(value);
+      const isClient = ATTACHMENT.some(item => item.DOC_CATEGORY === removedOption);
+  
+      if (isClient) {
+        setOptionToRemove(removedOption);
+        setOpenDialogBox(true);
+        return;
+      }
     }
-
+  
+    setSelectedValues(value);
   }, [selectedValues]);
-
 
 
   // REMOVE DOC CATEGORY
