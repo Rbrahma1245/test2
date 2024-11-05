@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Card, Stack, Button, Backdrop, Container } from '@mui/material';
+import * as XLSX from 'xlsx';
 import {
   DataGrid,
   GridToolbarExport,
@@ -51,8 +52,8 @@ function Project() {
   };
 
   const handleEditClick = (data) => {
-    console.log(data.row);
-    // router.push(`/cHJvamVjdERldGFpbHM=/${data.id}`);
+    console.log(data);
+    router.push(`/cHJvamVjdERldGFpbHM=/${data.id}`);
   };
 
   // Preprocess the rows data to extract inner text from projectDescription
@@ -90,35 +91,20 @@ function Project() {
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
+  
       getActions: (params) => {
-        const isInEditMode = '';
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              icon={<Iconify icon="ri:save-2-fill" />}
-              label='SAVE_TEXT'
-              sx={{
-                color: 'primary.main',
-              }}
-            // onClick={() => console.log('edit functionality')}
-            />,
-            <GridActionsCellItem
-              icon={<Iconify icon="iconoir:cancel" />}
-              label='CANCEL_TEXT'
-              className="textPrimary"
-              // onClick={() => handleConfirmCancleClick(params.id, params.row)}
-              color="inherit"
-            />,
-          ];
-        }
-
 
         return [
           <GridActionsCellItem
             icon={<Iconify icon="solar:pen-bold" />}
             label='EDIT_TEXT'
             className="textPrimary"
-            onClick={(e) => {
+            // onClick={(e) => {
+            //   handleEditClick(params.row, params.id);
+            // }}
+            onClick={(event) => {
+              console.log(event, "eventtttt");
+              event.stopPropagation(); // Stop the event from propagating to the cell
               handleEditClick(params.row, params.id);
             }}
             color="inherit"
@@ -150,7 +136,7 @@ function Project() {
 
   const handleDataClick = (data) => {
     // console.log(data.row.PROJECT_ID);
-    router.push(`/viewDetails/${data.row.PROJECT_ID}`);
+    // router.push(`/viewDetails/${data.row.PROJECT_ID}`);
   };
 
 
@@ -168,9 +154,24 @@ function Project() {
     }
   }, []);
 
+  const [searchResult, setSearchResult] = useState([])
+
   const handleFilterChange = (searchInput) => {
     setFilterModel(searchInput)
     sessionStorage.setItem('filterModel', JSON.stringify(searchInput));
+
+
+    const searchValue = searchInput.quickFilterValues?.[0] || '';
+    
+    // Filter the `matching` rows based on the search value
+    const filteredData = matching.filter((row) =>
+      Object.values(row).some((value) =>
+        String(value).toLowerCase().includes(searchValue.toLowerCase())
+      )
+    );
+    
+    // Log the filtered data to the console
+    console.log("Filtered Data:", filteredData);
   };
 
 
@@ -183,6 +184,24 @@ function Project() {
     }
   }, [filterModel.quickFilterValues]);
 
+
+  const handleDownloadExcel = () => {
+    // Extract column headers and row data
+    const headers = searchResult.map(col => col.headerName);
+    const rows = matching.map(row =>
+      columns.map(col => row[col.field])
+    );
+
+    // Prepare the worksheet
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+
+    // Create a new workbook and append the worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'DataGridData');
+
+    // Generate Excel file and trigger a download
+    XLSX.writeFile(workbook, 'DataGridData.xlsx');
+  };
 
 
   return (
@@ -212,7 +231,19 @@ function Project() {
                   paginationModel: { pageSize: 5 },
                 },
               }}
-              onCellClick={(data) => handleDataClick(data)}
+              disableSelectionOnClick  // Disables row selection when clicking inside the grid
+              disableRowSelectionOnClick
+              // onCellClick={(data) => handleDataClick(data)}
+              onCellClick={(params, event) => {
+                // Add a condition to check if the action column is clicked
+                if (params.field === 'Actions') {
+                  event.stopPropagation();
+                } else {
+                  console.log("Cell clicked:", params.field); // For debugging
+                }
+              }}
+
+      
               slots={{
                 toolbar: () => (
                   <GridToolbarContainer>
@@ -229,6 +260,14 @@ function Project() {
                         onClick={() => handleCreateProject()}
                       >
                         {'CREATE_PROJECT'}
+                      </Button>
+
+                      <Button
+                        variant="contained"
+                        startIcon={<Iconify icon="mingcute:add-line" />}
+                        onClick={() => handleDownloadExcel()}
+                      >
+                        Download as Excel
                       </Button>
 
                     </Card>

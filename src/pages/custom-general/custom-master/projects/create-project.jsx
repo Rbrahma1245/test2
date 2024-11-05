@@ -606,6 +606,11 @@ function CreateProject() {
                 name="projectLead"
                 label={'PROJECT_LEAD'}
                 sx={{ textAlign: 'left', maxWidth: 320 }}
+                SelectProps={{
+                  readOnly: true,
+                  disabled: true,
+                  IconComponent: () => null, // This hides the dropdown icon
+                }}
               >
                 {LEAD_OPTIONS.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
