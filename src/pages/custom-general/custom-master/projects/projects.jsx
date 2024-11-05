@@ -169,6 +169,7 @@ function Project() {
         String(value).toLowerCase().includes(searchValue.toLowerCase())
       )
     );
+    setSearchResult(filteredData)
     
     // Log the filtered data to the console
     console.log("Filtered Data:", filteredData);
@@ -188,7 +189,7 @@ function Project() {
   const handleDownloadExcel = () => {
     // Extract column headers and row data
     const headers = searchResult.map(col => col.headerName);
-    const rows = matching.map(row =>
+    const rows = searchResult.map(row =>
       columns.map(col => row[col.field])
     );
 
