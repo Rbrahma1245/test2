@@ -157,16 +157,24 @@ function Project() {
   const [searchResult, setSearchResult] = useState([])
 
   const handleFilterChange = (searchInput) => {
+    console.log(searchInput, "SEARCH");
+    
     setFilterModel(searchInput)
     sessionStorage.setItem('filterModel', JSON.stringify(searchInput));
 
 
     const searchValue = searchInput.quickFilterValues?.[0] || '';
+    const filterSearchValue = searchInput.items?.[0].value || '';
+    console.log(matching, "MATCHING");
+
+    const searchTerm = filterSearchValue || searchValue;
+    
+
     
     // Filter the `matching` rows based on the search value
     const filteredData = matching.filter((row) =>
       Object.values(row).some((value) =>
-        String(value).toLowerCase().includes(searchValue.toLowerCase())
+        String(value).toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
     setSearchResult(filteredData)
